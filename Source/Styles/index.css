@@ -1,0 +1,141 @@
+body {
+  background: #1e1e2f;
+  color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  background-color: #2a2a3d;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+h1 {
+  margin-bottom: 30px;
+  color: #e0e0ff;
+}
+
+.buttons {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* separa los botones */
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+#status {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#progressContainer {
+  width: 100%;
+  background-color: #3a3a50;
+  border-radius: 5px;
+  height: 25px;
+  margin-top: 15px;
+  overflow: hidden;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background-color: #4CAF50;
+  text-align: center;
+  color: white;
+  line-height: 25px;
+  transition: width 0.3s;
+  font-weight: bold;
+}
+
+/* Link Info */
+#infoLink {
+  display: inline-block;
+  margin-top: 25px;
+  font-size: 14px;
+  color: #82cfff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+#infoLink:hover {
+  color: #4dd0e1;
+  text-decoration: underline;
+}
+
+/* Modal general */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.7);
+}
+
+/* Contenido del modal */
+.modal-content {
+  background-color: #2a2a3d;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  color: #f1f1f1;
+}
+
+/* Botón cerrar */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: -10px;
+}
+
+.close:hover,
+.close:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Enlaces dentro del modal */
+.modal-content a {
+  color: #82cfff;
+  text-decoration: none;
+}
+
+.modal-content a:hover {
+  color: #4dd0e1;
+  text-decoration: underline;
+}

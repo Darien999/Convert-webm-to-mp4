@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Electron Video Converter</title>
+  <link rel="stylesheet" href="../Styles/index.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Convert WebM → MP4</h2>
+
+    <div class="buttons">
+      <button id="selectBtn">Select WebM File</button>
+      <button id="convertBtn">Convert</button>
+    </div>
+
+    <p id="status">No file selected</p>
+
+    <div id="progressContainer">
+      <div id="progressBar"></div>
+    </div>
+
+    <!-- Info link -->
+    <a href="#" id="infoLink">Info</a>
+	<br>
+	<br>
+	<p style="font-size: small;"><b>Copyright (c) 2025 Darien Romero</b></p>
+
+    <!-- Modal hidden -->
+    <div id="infoModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>About</h2>
+        <br>
+        <p><b>Author:</b> Darien Romero</p>
+		<p><b>License:</b> MIT</p>
+		<p><b><a href="https://paypal.me/DarienRomeroDev" target="_blank" id="Donation">Donate</a></b></p>
+		<br>
+        <p><b>Project:</b> Convert WebM → MP4 'Electron'</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../Logics/renderer.js"></script>
+</body>
+</html>
