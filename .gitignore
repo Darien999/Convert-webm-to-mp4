@@ -1,3 +1,14 @@
+# Node modules
 node_modules/
+
+# Builds / dist
 dist/
+
+# Logs
 *.log
+
+# MacOS system files
+.DS_Store
+
+# Env files (si los hay)
+.env
