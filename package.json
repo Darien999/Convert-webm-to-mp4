@@ -10,23 +10,19 @@
   "build": {
     "appId": "com.darien.electronvideoconverter",
     "productName": "Convert WebM → MP4",
-    "files": [
-      "Source/**/*",
-      "Logics/**/*",
-      "Styles/**/*",
-      "main.js",
-      "package.json"
-    ],
     "directories": {
-      "buildResources": "assets"
-    },
-    "win": {
-      "target": "nsis"
+      "buildResources": "build/icon"
     },
     "mac": {
-      "target": "dmg"
+      "icon": "build/icon/icon.icns",
+      "target": ["dmg"]
+    },
+    "win": {
+      "icon": "build/icon/Logo.ico",
+      "target": "nsis"
     },
     "linux": {
+      "icon": "build/icon/icon_512x512.png",
       "target": ["AppImage", "deb"]
     }
   },
