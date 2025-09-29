@@ -1,7 +1,22 @@
+const os = require("os");
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn, exec } = require('child_process');
 
 let mainWindow;
+
+let FFMPEG_PATH = "ffmpeg";
+let FFPROBE_PATH = "ffprobe";
+
+if (os.platform() === "darwin") {
+  // macOS
+  FFMPEG_PATH = "/opt/homebrew/bin/ffmpeg";
+  FFPROBE_PATH = "/opt/homebrew/bin/ffprobe";
+} else if (os.platform() === "win32") {
+  // Windows -> si está en PATH
+  FFMPEG_PATH = "ffmpeg.exe";
+  FFPROBE_PATH = "ffprobe.exe";
+} // Sin problemas linux
+
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -15,7 +30,13 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile('Source/Pages/index.html');
+  
+
+  if (checkDependencies()) {
+    mainWindow.loadFile('Source/Pages/index.html');
+  } else {
+    mainWindow.loadFile('Source/Pages/missing.html');
+  }
   // mainWindow.webContents.openDevTools();
 }
 
@@ -33,7 +54,7 @@ ipcMain.handle('open-file-dialog', async () => {
 // Get total video duration with ffprobe
 function getVideoDuration(inputPath) {
   return new Promise((resolve, reject) => {
-    exec(`ffprobe -i "${inputPath}" -show_entries format=duration -v quiet -of csv="p=0"`, (err, stdout) => {
+    exec(`${FFPROBE_PATH} -i "${inputPath}" -show_entries format=duration -v quiet -of csv="p=0"`, (err, stdout) => {
       if (err) reject(err);
       else resolve(parseFloat(stdout));
     });
@@ -45,7 +66,7 @@ ipcMain.handle('convert-video', async (event, inputPath, outputPath) => {
   const totalDuration = await getVideoDuration(inputPath);
 
   return new Promise((resolve, reject) => {
-    const ffmpeg = spawn('ffmpeg', ['-i', inputPath, '-y', outputPath]);
+    const ffmpeg = spawn(FFMPEG_PATH, ['-i', inputPath, '-y', outputPath]);
 
     ffmpeg.stderr.on('data', (data) => {
       const message = data.toString();
@@ -66,3 +87,10 @@ ipcMain.handle('convert-video', async (event, inputPath, outputPath) => {
     });
   });
 });
+
+//Validar dependencias
+const fs = require('fs');
+
+function checkDependencies() {
+  return fs.existsSync(FFMPEG_PATH) && fs.existsSync(FFPROBE_PATH);
+}
