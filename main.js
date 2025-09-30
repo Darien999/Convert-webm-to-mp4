@@ -1,22 +1,58 @@
 const os = require("os");
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn, exec } = require('child_process');
+const path = require("path");
+const fs = require("fs");
 
 let mainWindow;
 
 let FFMPEG_PATH = "ffmpeg";
 let FFPROBE_PATH = "ffprobe";
 
+function findExecutable(possiblePaths) {
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return p;
+    }
+  }
+  return null;
+}
+
 if (os.platform() === "darwin") {
   // macOS
   FFMPEG_PATH = "/opt/homebrew/bin/ffmpeg";
   FFPROBE_PATH = "/opt/homebrew/bin/ffprobe";
 } else if (os.platform() === "win32") {
-  // Windows -> si está en PATH
-  FFMPEG_PATH = "ffmpeg.exe";
-  FFPROBE_PATH = "ffprobe.exe";
-} // Sin problemas linux
+  // Windows - probar varias rutas comunes
+  const ffmpegCandidates = [
+    "ffmpeg.exe", // si está en PATH
+    "C:\\ffmpeg\\bin\\ffmpeg.exe",
+    "C:\\ProgramData\\chocolatey\\bin\\ffmpeg.exe",
+    path.join(process.env.USERPROFILE || "", "scoop\\apps\\ffmpeg\\current\\bin\\ffmpeg.exe")
+  ];
 
+  const ffprobeCandidates = [
+    "ffprobe.exe",
+    "C:\\ffmpeg\\bin\\ffprobe.exe",
+    "C:\\ProgramData\\chocolatey\\bin\\ffprobe.exe",
+    path.join(process.env.USERPROFILE || "", "scoop\\apps\\ffmpeg\\current\\bin\\ffprobe.exe")
+  ];
+
+  FFMPEG_PATH = findExecutable(ffmpegCandidates);
+  FFPROBE_PATH = findExecutable(ffprobeCandidates); 
+} else { 
+  // Linux - asumir que está en PATH
+  FFMPEG_PATH = "ffmpeg";
+  FFPROBE_PATH = "ffprobe";
+} 
+
+// Validación
+if (!FFMPEG_PATH || !FFPROBE_PATH) {
+  console.error("No se encontró FFmpeg/FFprobe en el sistema.");
+} else {
+  console.log("FFmpeg en:", FFMPEG_PATH);
+  console.log("FFprobe en:", FFPROBE_PATH);
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -24,20 +60,21 @@ function createWindow() {
     height: 450,
     resizable: true,
     fullscreenable: false,
+    autoHideMenuBar: true,
     webPreferences: { 
       nodeIntegration: true, 
       contextIsolation: false 
     }
   });
 
-  
+  mainWindow.setMenu(null);
 
   if (checkDependencies()) {
     mainWindow.loadFile('Source/Pages/index.html');
   } else {
     mainWindow.loadFile('Source/Pages/missing.html');
   }
-  // mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
@@ -88,8 +125,6 @@ ipcMain.handle('convert-video', async (event, inputPath, outputPath) => {
   });
 });
 
-//Validar dependencias
-const fs = require('fs');
 
 function checkDependencies() {
   return fs.existsSync(FFMPEG_PATH) && fs.existsSync(FFPROBE_PATH);
